@@ -41,8 +41,8 @@ class draw_training_node:
         
 
     def make_path(self):
-        # with open(self.path + 'training.csv', 'r') as f:
         with open(self.path + 'traceable_pos.csv', 'r') as f:
+        # with open(roslib.packages.get_pkg_dir('nav_cloning') + '/data/analysis/traceable_pos.csv', 'r') as f:
             is_first = True
             for row in csv.reader(f):
                 # if is_first:
@@ -70,7 +70,7 @@ class draw_training_node:
         self.points6.markers = []
         num = 0
 
-        with open(self.path + 'new2-3_1/score.csv', 'r') as f:
+        with open(self.path + 'try_4/score.csv', 'r') as f:
         # with open('/home/kiyooka/Downloads/first/score.csv', 'r') as f:
             for row in csv.reader(f):
                 if (num+1) %7 != 4:

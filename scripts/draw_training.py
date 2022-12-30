@@ -56,8 +56,8 @@ class draw_training_node:
         list_y = []
         list_count = []
         list_collision = []
-        with open(self.path + 'new2-3_1/trajectory.csv', 'r') as f:
-        # with open('/home/kiyooka/Downloads/first/trajectory.csv', 'r') as f:
+        with open(self.path + 'trial/trajectory.csv', 'r') as f:
+        # with open('/home/kiyooka/Downloads/trajectory.csv', 'r') as f:
             # is_first = True
             for row in csv.reader(f):
                 # if is_first:

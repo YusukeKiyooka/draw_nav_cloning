@@ -21,7 +21,6 @@ class draw_training_node:
         self.point6_count = 0
         self.path_data.header.frame_id = "map"
         self.pose_list = [[],[]]
-        self.make_path()
         self.make_points()
         
 
@@ -31,7 +30,11 @@ class draw_training_node:
         num = 0
 
         with open(self.path + 'path.csv', 'r') as f:
+            is_first = True
             for row in csv.reader(f):
+                if is_first:
+                    is_first = False
+                    continue
 
                 no, str_x, str_y = row
                 x, y = float(str_x), float(str_y)
