@@ -7,18 +7,19 @@ from visualization_msgs.msg import *
 import csv
 import roslib
 
-RADIUS = 0.03
+RADIUS = 0.05
 
 class draw_training_node:
     def __init__(self):
         rospy.init_node("draw_node", anonymous=True)
-        self.path = roslib.packages.get_pkg_dir('nav_cloning') + '/data/analysis/change_dataset_balance/'
+        # self.path = roslib.packages.get_pkg_dir('nav_cloning') + '/data/analysis/change_dataset_balance/'
+        self.path = roslib.packages.get_pkg_dir('nav_cloning') + '/data/analysis/'
         # self.path = roslib.packages.get_pkg_dir('nav_cloning') + '/data/analysis/use_dl_output/'
         self.path_pub = rospy.Publisher('move_base/DWAPlannerROS/local_plan', Path, queue_size=10)
-        self.points6_pub = rospy.Publisher('point6', MarkerArray, queue_size=10)
+        self.points7_pub = rospy.Publisher('point7', MarkerArray, queue_size=10)
         self.path_data = Path()
-        self.points6 = MarkerArray()
-        self.point6_count = 0
+        self.points7 = MarkerArray()
+        self.point7_count = 0
         self.path_data.header.frame_id = "map"
         self.pose_list = [[],[]]
         self.make_points()
@@ -26,7 +27,7 @@ class draw_training_node:
 
     
     def make_points(self):
-        self.points6.markers = []
+        self.points7.markers = []
         num = 0
 
         with open(self.path + 'path.csv', 'r') as f:
@@ -36,9 +37,16 @@ class draw_training_node:
                     is_first = False
                     continue
 
+                # str_x, str_y = row
                 no, str_x, str_y = row
                 x, y = float(str_x), float(str_y)
-
+        # with open(self.path + 'corner/traceable_pos.csv', 'r') as f:
+        #     for row in csv.reader(f):
+        #
+        #         str_x, str_y,str_the = row
+        #         x, y = float(str_x), float(str_y)
+        #
+        #
                 point_marker = Marker()
 
                 point_marker.header.frame_id = "map"
@@ -51,8 +59,8 @@ class draw_training_node:
 
                 point_marker.color.a = 1.0
 
-                point_marker.pose.position.x = x #x
-                point_marker.pose.position.y = y #y
+                point_marker.pose.position.x = x + 100 #x
+                point_marker.pose.position.y = y + 100 #y
                 point_marker.pose.position.z = 0.0
 
                 point_marker.pose.orientation.x = 0.0
@@ -60,16 +68,16 @@ class draw_training_node:
                 point_marker.pose.orientation.z = 0.0
                 point_marker.pose.orientation.w = 1.0
 
-                point_marker.color.r = 0.0
-                point_marker.color.g = 1.0
+                point_marker.color.r = 0.4
+                point_marker.color.g = 0.0
                 point_marker.color.b = 0.0
-                point_marker.id = self.point6_count
-                self.point6_count += 1
-                self.points6.markers.append(point_marker)
+                point_marker.id = self.point7_count
+                self.point7_count += 1
+                self.points7.markers.append(point_marker)
 
     def loop(self):
         self.path_pub.publish(self.path_data)
-        self.points6_pub.publish(self.points6)
+        self.points7_pub.publish(self.points7)
     
 if __name__ == '__main__':
     rg = draw_training_node()

@@ -12,8 +12,10 @@ RADIUS = 0.03
 class draw_training_node:
     def __init__(self):
         rospy.init_node("draw_node", anonymous=True)
-        self.path = roslib.packages.get_pkg_dir('nav_cloning') + '/data/analysis/change_dataset_balance/'
+        # self.path = roslib.packages.get_pkg_dir('nav_cloning') + '/data/analysis/change_dataset_balance/'
+        # self.path = roslib.packages.get_pkg_dir('nav_cloning') + '/data/analysis/change_dataset_balance/corner/'
         # self.path = roslib.packages.get_pkg_dir('nav_cloning') + '/data/analysis/use_dl_output/'
+        self.path = roslib.packages.get_pkg_dir('nav_cloning') + '/data/analysis/'
         self.path_pub = rospy.Publisher('move_base/DWAPlannerROS/local_plan', Path, queue_size=10)
         self.points1_pub = rospy.Publisher('point1', MarkerArray, queue_size=10)
         self.points2_pub = rospy.Publisher('point2', MarkerArray, queue_size=10)
@@ -41,7 +43,8 @@ class draw_training_node:
         
 
     def make_path(self):
-        with open(self.path + 'traceable_pos.csv', 'r') as f:
+        with open(self.path + 'change_dataset_balance/traceable_pos_last2.csv', 'r') as f:
+        # with open(self.path + 'use_dl_output/traceable_pos.csv', 'r') as f:
         # with open(roslib.packages.get_pkg_dir('nav_cloning') + '/data/analysis/traceable_pos.csv', 'r') as f:
             is_first = True
             for row in csv.reader(f):
@@ -58,8 +61,9 @@ class draw_training_node:
                 pose.pose.position.y = y
                 self.pose_list[0].append(x)
                 self.pose_list[1].append(y)
-                if len(self.pose_list[0]) %7 == 4:
-                    self.path_data.poses.append(pose)
+                # if len(self.pose_list[0]) %5 == 3:
+                    # self.path_data.poses.append(pose)
+                self.path_data.poses.append(pose)
     
     def make_points(self):
         self.points1.markers = []
@@ -70,16 +74,21 @@ class draw_training_node:
         self.points6.markers = []
         num = 0
 
-        with open(self.path + 'try_4/score.csv', 'r') as f:
+        # with open(self.path + 'use_dl_output/2-3_1/score.csv', 'r') as f:
+        with open(self.path + 'change_dataset_balance/2-3_5/score.csv', 'r') as f:
+        # with open(self.path + 'follow_path/2-3_1/score.csv', 'r') as f:
         # with open('/home/kiyooka/Downloads/first/score.csv', 'r') as f:
             for row in csv.reader(f):
-                if (num+1) %7 != 4:
-                    x = self.pose_list[0][num]
-                    y = self.pose_list[1][num]
-                else:
-                    num += 1
-                    x = self.pose_list[0][num]
-                    y = self.pose_list[1][num]
+                # if (num+1) %7 != 4:
+                # if (num+1) %5 != 3:
+                #     x = self.pose_list[0][num]
+                #     y = self.pose_list[1][num]
+                # else:
+                #     num += 1
+                #     x = self.pose_list[0][num]
+                #     y = self.pose_list[1][num]
+                x = self.pose_list[0][num]
+                y = self.pose_list[1][num]
                 num += 1
                 # str_x, str_y, str_score = row
                 angle_score, position_score = row
@@ -144,8 +153,8 @@ class draw_training_node:
                     self.point5_count += 1
                     self.points5.markers.append(point_marker)
                 else:
-                    point_marker.color.r = 1.0
-                    point_marker.color.g = 1.0
+                    point_marker.color.r = 0.0
+                    point_marker.color.g = 0.0
                     point_marker.color.b = 0.0
                     point_marker.id = self.point6_count
                     self.point6_count += 1
